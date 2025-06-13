@@ -2,6 +2,7 @@ import streamlit as st
 import datasets
 import graphs
 
+import plotly_express as px
 
 # --- PAGE CONFIGURATION ---
 st.set_page_config(
@@ -90,3 +91,52 @@ with tab2:
     3. International collaboration in research is on the rise, with an increasing number of publications featuring authors from different countries over the years.
                 """
     )
+
+
+# --PUBLICATIONS PER COUNTRY--
+st.title("Number of Publications per Country")
+
+tab1, tab2 = st.tabs(["Sickle Cell Retinopathy", "Diabetic Retinopathy"])
+with tab1:
+    st.subheader("Number of Publications per Country on Sickle Cell Retinopathy")
+    scr_countries = datasets.scr_publications()
+
+    st.dataframe(
+        scr_countries,
+        column_config={
+            "_index": None,
+            "countries": "Country",
+            "counts": "Number of Publications",
+        },
+        hide_index=True,
+    )
+    st.subheader("Number of Publications per Country on Sickle Cell Retinopathy")
+    figure = px.bar(
+        scr_countries,
+        x="countries",
+        y="counts",
+        title="20 Most Prolific Countries in DR Research",
+    )
+    st.plotly_chart(figure, use_container_width=True)
+
+with tab2:
+    st.subheader("Number of Publications per Country on Diabetic Retinopathy")
+    dr_countries = datasets.dr_publications()
+
+    st.dataframe(
+        dr_countries,
+        column_config={
+            "_index": None,
+            "countries": "Country",
+            "counts": "Number of Publications",
+        },
+        hide_index=True,
+    )
+    st.subheader("Number of Publications per Country on Diabetic Retinopathy")
+    figure = px.bar(
+        dr_countries,
+        x="countries",
+        y="counts",
+        title="20 Most Prolific Countries in DR Research",
+    )
+    st.plotly_chart(figure, use_container_width=True)
