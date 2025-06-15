@@ -9,4 +9,7 @@ dependencies = [
     "plotly-express>=0.4.1",
     "plotly>=6.1.2",
     "streamlit>=1.45.1",
+    "millify>=0.1.1",
+    "squarify>=0.4.4",
+    "matplotlib>=3.10.3",
 ]

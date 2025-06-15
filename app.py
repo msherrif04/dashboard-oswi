@@ -3,6 +3,8 @@ import datasets
 import graphs
 
 import plotly_express as px
+from millify import millify
+
 
 # --- PAGE CONFIGURATION ---
 st.set_page_config(
@@ -110,12 +112,12 @@ with tab1:
         },
         hide_index=True,
     )
-    st.subheader("Number of Publications per Country on Sickle Cell Retinopathy")
+    st.subheader("20 Most Prolific Countries on Sickle Cell Retinopathy")
     figure = px.bar(
         scr_countries,
         x="countries",
         y="counts",
-        title="20 Most Prolific Countries in DR Research",
+        title="Publications per Country on Sickle Cell Retinopathy",
     )
     st.plotly_chart(figure, use_container_width=True)
 
@@ -132,11 +134,110 @@ with tab2:
         },
         hide_index=True,
     )
-    st.subheader("Number of Publications per Country on Diabetic Retinopathy")
+    st.subheader("20 Most Prolific Countries on Diabetic Retinopathy")
     figure = px.bar(
         dr_countries,
         x="countries",
         y="counts",
-        title="20 Most Prolific Countries in DR Research",
+        title="Publications per Country on Diabetic Retinopathy",
     )
     st.plotly_chart(figure, use_container_width=True)
+
+
+# --COMPARE COUNTRIES--
+
+st.title("Compare The Publication Output of Any Two Countries")
+country_list = scr_countries["countries"].tolist()
+country_1 = st.selectbox("Country 1", country_list)
+country_2 = st.selectbox("Country 2", country_list)
+
+tab1, tab2 = st.tabs(["Sickle Cell Retinopathy", "Diabetic Retinopathy"])
+with tab1:
+    comparison_plot = graphs.compare_countries(scr_countries, country_1, country_2)
+    st.plotly_chart(comparison_plot, use_container_width=True)
+
+with tab2:
+    comparison_plot = graphs.compare_countries(dr_countries, country_1, country_2)
+    st.plotly_chart(comparison_plot, use_container_width=True)
+
+
+##--FUNDING MAP--
+scr_funding_data = datasets.scr_funding()
+dr_funding_data = datasets.dr_funding()
+
+# labels
+funding_labels = {"Sources": "Funding Sources", "Total_funding": "Times Funded"}
+
+# Number of Funding entities
+num_funding_ents_scr = scr_funding_data["Funding"].count()
+num_funding_ents_dr = dr_funding_data["Funding"].count()
+delta_ents = millify(0 - (num_funding_ents_dr / num_funding_ents_scr))
+delta_funds = millify(
+    0 - (dr_funding_data["counts"].sum() / scr_funding_data["counts"].sum())
+)
+
+# Times funded
+times_funded_scr = scr_funding_data["counts"].sum()
+times_funded_dr = dr_funding_data["counts"].sum()
+
+st.title("Number of Reported Funding Sources For Research on SCR and DR")
+
+st.subheader("Number of Funding Sources per Country on Diabetic Retinopathy")
+dr_ents, dr_funds = st.columns(2)
+dr_ents.metric(
+    label=funding_labels["Sources"],
+    value=millify(num_funding_ents_dr),
+    border=True,
+)
+
+dr_funds.metric(
+    label=funding_labels["Total_funding"],
+    value=millify(times_funded_dr),
+    border=True,
+)
+
+st.subheader("Number of Funding Sources per Country on Sickle Cell Retinopathy")
+scr_ents, scr_funds = st.columns(2)
+scr_ents.metric(
+    label=funding_labels["Sources"],
+    value=millify(num_funding_ents_scr),
+    delta=f"{delta_ents} x less",
+    border=True,
+)
+
+scr_funds.metric(
+    label=funding_labels["Total_funding"],
+    value=millify(times_funded_scr),
+    delta=f"{delta_funds} x less",
+    border=True,
+)
+
+st.subheader("Distrubtion of Funding Sources per Country")
+tab1, tab2 = st.tabs(["Sickle Cell Retinopathy", "Diabetic Retinopathy"])
+
+with tab1:
+    st.subheader("Number of Funding Sources per Country on Sickle Cell Retinopathy")
+    scr_funding_fig = graphs.funding_map(scr_funding_data, ["countries", "Funding"])
+    st.plotly_chart(scr_funding_fig)
+
+    st.write(
+        """
+    1. The USA secured the majority of declared funding sources for sickle cell retinopathy (SCR) research, with 438 sources.
+    2. France, and UK with 46, and 41 declared funding sources, respectively.
+    3. Jamaica had 24 reported funding sources.
+    4. Nigeria had funding for six SCR research projects, while Ghana had two sources of funding.
+                """
+    )
+
+with tab2:
+    st.subheader("Number of Funding Sources per Country on Diabetic Retinopathy")
+    filtered = dr_funding_data.groupby("countries")["counts"].sum().reset_index()
+    dr_funding_fig = graphs.funding_map(filtered, ["countries", "counts"])
+    st.plotly_chart(dr_funding_fig, use_container_width=True)
+    st.write(
+        """
+    1. The United States obtained the majority of declared funding sources for diabetic retinopathy (DR) research, with 20,800 sources.
+    2. The United Kingdom secured 6,143 sources, and China had 4,551 sources of funding.
+    3. Ghana received funding for 40 DR research projects, while Nigeria had 145 declared funding sources.
+                """
+    )
