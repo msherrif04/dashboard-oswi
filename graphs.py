@@ -70,6 +70,7 @@ def compare_countries(df, country1="United States", country2="Jamaica"):
         text_auto=True,
         color="countries",
         labels={"counts": "Number of publications"},
+        template="simple_white",
     )
     fig.update_layout(
         legend=dict(
@@ -77,21 +78,6 @@ def compare_countries(df, country1="United States", country2="Jamaica"):
         )
     )
     return fig
-
-
-# def funding_map(dataframe):
-#     funding_fig = px.treemap(
-#         dataframe,
-#         path=["countries", "Funding"],
-#         values="counts",
-#         color="countries",
-#         color_continuous_scale="RdBu",
-#         template="seaborn",
-#     )
-#     funding_fig.update_traces(root_color="lightgrey")
-#     funding_fig.update_layout(margin=dict(t=50, l=25, r=25, b=25))
-
-#     return funding_fig
 
 
 @st.cache_data(
@@ -116,16 +102,46 @@ def funding_map(dataframe, path):
     return funding_fig
 
 
-def sunburst(dataframe):
-    fig = px.sunburst(
+def journal_chart(dataframe, number=[0, 10]):
+    dataframe = dataframe.iloc[number[0] : number[1]]
+    journal_fig = px.bar(
         dataframe,
-        path=["countries", "Funding"],
-        values="counts",
-        color="countries",
-        color_continuous_scale="YlGnBu",
-        color_continuous_midpoint=np.average(
-            dataframe["counts"], weights=dataframe["counts"]
-        ),
-        template="plotly_dark",
+        x="Journal",
+        y="counts",
+        text_auto=True,
+        # color="Journal",
+        labels={"counts": "Number of Publications"},
+        template="simple_white",
     )
+    journal_fig.update_layout(
+        legend=dict(
+            xanchor="right",
+        )
+    )
+    return journal_fig
+
+
+def scatter_plot(dataframe):
+    fig = px.scatter(
+        dataframe,
+        x="SCR",
+        y="DR",
+        size="SCR+DR",
+        color="ratio",
+        hover_name="Journal",
+        hover_data=["Journal", "SCR", "DR"],
+        color_continuous_scale=["red", "green", "blue"],
+        template="simple_white",
+    )
+    fig.update_layout(
+        coloraxis_colorbar=dict(
+            orientation="v",
+            title="SCR : [SCR+DR]",
+            thickness=5,
+            len=0.8,
+            nticks=3,
+            yref="paper",
+        )
+    )
+
     return fig

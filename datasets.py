@@ -64,3 +64,13 @@ def scr_journals():
 def dr_journals():
     df = pd.read_csv("./data/dbr_journal.csv", index_col=0)
     return df
+
+
+@st.cache_data
+def process_df(scr_df, dr_df, on="Journal"):
+    all_journals = pd.merge(dr_df, scr_df, on=on, how="outer")
+    all_journals.rename(columns={"counts_x": "DR", "counts_y": "SCR"}, inplace=True)
+    all_journals.fillna(0, inplace=True)
+    all_journals["SCR+DR"] = all_journals["SCR"] + all_journals["DR"]
+    all_journals["ratio"] = all_journals["SCR"] / all_journals["SCR+DR"]
+    return all_journals

@@ -241,3 +241,60 @@ with tab2:
     3. Ghana received funding for 40 DR research projects, while Nigeria had 145 declared funding sources.
                 """
     )
+
+
+# --Journals
+st.header("Which journal has published the most on sickle cell retinopathy?")
+scr_journals = datasets.scr_journals()
+dr_journals = datasets.dr_journals()
+num_journals_scr = scr_journals["Journal"].count()
+num_journals_dr = dr_journals["Journal"].count()
+
+
+col1, col2 = st.columns(2)
+col1.metric(
+    label="Number of Journals Publishing on Sickle Cell Retinopathy",
+    value=num_journals_scr,
+    border=True,
+)
+
+col2.metric(
+    label="Number of Journals Publishing on Diabetic Retinopathy",
+    value=num_journals_dr,
+    border=True,
+)
+
+all_journals = datasets.process_df(scr_journals, dr_journals)
+scatter_plot = graphs.scatter_plot(all_journals)
+st.plotly_chart(scatter_plot, use_container_width=True)
+
+st.write(
+    """
+1. Leading scientific journals like the "American Journal of Ophthalmology" and the "British Journal of Ophthalmology" have significantly enriched the publishing landscape on sickle cell retinopathy.
+2. "Archives of Ophthalmology" has also been a substantial contributor to this field.
+3. The "European Journal of Ophthalmology" and the "Investigative Ophthalmology and Visual Sciences" have consistently published research papers on sickle cell retinopathy.
+4. Other ophthalmology-related and haematology-focused publications have also played vital roles in disseminating research on this topic.            
+
+5. The publishing landscape for diabetic retinopathy (DR) is robust, with various scientific journals contributing to research dissemination.
+6. Investigative Ophthalmology and Visual Science is the most prolific journal in this field, publishing 1,406 research papers.
+7. Other notable journals, such as Retina, Ophthalmology, and the American Journal of Ophthalmology, have made significant contributions.
+8. Non-ophthalmology-focused journals like Diabetes Care, Diabetes Medicine, and Diabetes Research and Clinical Practice have also played a role in publishing research on DR .           
+                
+                """
+)
+
+st.divider()
+
+with st.container():
+    st.markdown(
+        """
+    Built with ❤️ by [Mohammed-Sherrif Fuseini][1].   
+    Member of the [Sickle Cell Retinopathy Network][4].  
+    Connect with me: [LinkedIn][2] | [Email][3].   
+
+    [1]: https://sites.google.com/view/msfuseini
+    [2]: https://www.linkedin.com/in/msfuseini/
+    [3]: mailto:msherrif04@gmail.com
+    [4]: https://www.sicklecellretinopathy.net/
+    """
+    )
