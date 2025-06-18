@@ -5,10 +5,10 @@ build/
 dist/
 wheels/
 *.egg-info
-.python-version
+/.python-version
 
 # Virtual environments
 .venv
 
 
-.gitignore
+/.gitignore
