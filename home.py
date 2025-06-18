@@ -148,8 +148,8 @@ with tab2:
 
 st.title("Compare The Publication Output of Any Two Countries")
 country_list = scr_countries["countries"].tolist()
-country_1 = st.selectbox("Country 1", country_list)
-country_2 = st.selectbox("Country 2", country_list)
+country_1 = st.selectbox("Country 1", country_list, index=0)
+country_2 = st.selectbox("Country 2", country_list, index=1)
 
 tab1, tab2 = st.tabs(["Sickle Cell Retinopathy", "Diabetic Retinopathy"])
 with tab1:
@@ -233,6 +233,9 @@ with tab2:
     st.subheader("Number of Funding Sources per Country on Diabetic Retinopathy")
     filtered = dr_funding_data.groupby("countries")["counts"].sum().reset_index()
     dr_funding_fig = graphs.funding_map(filtered, ["countries", "counts"])
+
+    # dr_funding_fig = graphs.funding_map(dr_funding_data, ["countries", "counts"])
+
     st.plotly_chart(dr_funding_fig, use_container_width=True)
     st.write(
         """

@@ -80,9 +80,7 @@ def compare_countries(df, country1="United States", country2="Jamaica"):
     return fig
 
 
-@st.cache_data(
-    hash_funcs={dict: lambda _: None}, show_spinner=True
-)  # Use st.cache_data for data/figures
+@st.cache_data(hash_funcs={dict: lambda _: None}, show_spinner=True)
 def funding_map(dataframe, path):
     funding_fig = px.treemap(
         dataframe,
@@ -145,3 +143,10 @@ def scatter_plot(dataframe):
     )
 
     return fig
+
+
+@st.cache_resource
+def network_map(mapUrl):
+    htmlFile = open(mapUrl, "r", encoding="utf-8")
+    source_code = htmlFile.read()
+    return source_code
