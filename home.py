@@ -292,12 +292,11 @@ with st.container():
     st.markdown(
         """
     Built with ❤️ by [Mohammed-Sherrif Fuseini][1].   
-    Member of the [Sickle Cell Retinopathy Network][4].  
-    Connect with me: [LinkedIn][2] | [Email][3].   
+    Member of the [Sickle Cell Retinopathy Network][3].  
+    Connect with me: [LinkedIn][2].   
 
     [1]: https://sites.google.com/view/msfuseini
     [2]: https://www.linkedin.com/in/msfuseini/
-    [3]: mailto:msherrif04@gmail.com
-    [4]: https://www.sicklecellretinopathy.net/
+    [3]: https://www.sicklecellretinopathy.net/
     """
     )
