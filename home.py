@@ -270,6 +270,10 @@ col2.metric(
 all_journals = datasets.process_df(scr_journals, dr_journals)
 scatter_plot = graphs.scatter_plot(all_journals)
 st.plotly_chart(scatter_plot, use_container_width=True)
+st.info("""
+        * size of the bubble indicates the number of research papers published by the journal on both SCR and DR
+        * color of bubble indicates the number of research papers published by the journal on SCR as a ratio of the total of SCR and DR - Blue for SCR > DR and Red for SCR < DR
+        """)
 
 st.write(
     """
